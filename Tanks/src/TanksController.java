@@ -164,26 +164,26 @@ public class TanksController implements MouseMotionListener, KeyListener, MouseL
 	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
 	 */
 	@Override
-	public void mouseEntered(MouseEvent a_e) 
-	{
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent a_e) 
-	{
-		
-	}
-	
-	@Override
-	public void mousePressed(MouseEvent a_e) 
-	{
-		if(a_e.getButton() == 1)
+		public void mouseEntered(MouseEvent a_e) 
 		{
-			m_model.getTanks().get(0).fireProjectile(m_mouse);
-			try
+			
+		}
+	
+		@Override
+		public void mouseExited(MouseEvent a_e) 
+		{
+			
+		}
+		
+		@Override
+		public void mousePressed(MouseEvent a_e) 
+		{
+			if(a_e.getButton() == 1)
 			{
-				m_model.getToServer().writeBytes("vuuuuuuuuuuuuuuuur");
+				m_model.getTanks().get(0).fireProjectile(m_mouse);
+				m_model.sendSomething("fire");
+				try
+			{
 				Clip clip = AudioSystem.getClip();
 				AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("blast.wav"));
 				clip.open(inputStream);

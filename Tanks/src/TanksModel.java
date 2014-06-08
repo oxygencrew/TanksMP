@@ -1,6 +1,8 @@
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -17,10 +19,10 @@ import java.util.ArrayList;
 public class TanksModel 
 {
 	private ArrayList<Tank> m_tanks;
-	private static Socket clientSocket = null;
+	private static Socket clientSocket;
 	private DataOutputStream toServer;
 	public DataOutputStream getToServer() {
-		return toServer;
+		return outToServer;
 	}
 
 	public void setToServer(DataOutputStream a_toServer) {
@@ -29,21 +31,33 @@ public class TanksModel
 
 	private DataInputStream fromServer;
 	TanksController m_controller;
+	private DataOutputStream outToServer;
 	
 	public TanksModel(TanksController a_controller) throws Exception
 	{
 		setTanks(new ArrayList<Tank>());
 		m_controller = a_controller;
 		m_tanks.add(new Tank(100, 100, 75, 50));
+		String sentence;
+		String modifiedSentence;
+		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
 		clientSocket = new Socket("localhost", 9000);
-		toServer = new DataOutputStream(clientSocket.getOutputStream());
-		setFromServer(new DataInputStream(clientSocket.getInputStream()));
-//		toServer = new ObjectOutputStream(clientSocket.getOutputStream());
-//		fromServer = new ObjectInputStream(clientSocket.getInputStream());
-		toServer.writeBytes("test");
-		System.out.println("aoiefjAEFF");
+		outToServer = new DataOutputStream(clientSocket.getOutputStream());
+		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+		sentence = m_tanks.get(0).getPos().toString();
+		outToServer.writeBytes("test");
 	}
 
+	public void sendSomething(String test)
+	{
+		try {
+			outToServer.writeBytes(test);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public ArrayList<Tank> getTanks() {
 		return m_tanks;
 	}
@@ -88,6 +102,7 @@ public class TanksModel
 							if (p.getPos().distance(p1.getPos()) < 10) {
 								p.setAlive(false);
 								p1.setAlive(false);
+								sendSomething("collisione");
 								System.out.println("Collisions");
 							}
 						}

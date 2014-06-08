@@ -1,10 +1,16 @@
 /**
  * 
  */
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
 import java.io.*;
 import java.net.*;
 
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 /**
  * @author justin
  *
@@ -16,19 +22,35 @@ public class TanksServer {
 	 */
 	public static void main(String[] args) throws Exception
 	{
-		ServerSocket serverSocket = new ServerSocket(9000);
+		
+		JFrame frame = new JFrame();
+		JPanel main = new JPanel(new BorderLayout());
+		frame.setTitle("chattings");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.pack();
+		frame.setSize(new Dimension(640, 480));
+		frame.setBackground(Color.green);
+		JTextField txt = new JTextField("");
+		txt.setPreferredSize(new Dimension(200, 25));
+		frame.add(main);
+		main.add(txt, BorderLayout.SOUTH);
+
+		frame.setVisible(true);
+		String clientSentence;
+		String capitalizedSentence;
+		ServerSocket welcomeSocket = new ServerSocket(9000);
 		
 		while(true)
 		{
-			Socket connectionSocket = serverSocket.accept();
-			System.out.println("client connected");
-			DataInputStream textFromClient = new DataInputStream(connectionSocket.getInputStream());
-			BufferedReader reader = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-			System.out.println(reader.readLine());
-			serverSocket.close();
-//			ObjectInputStream fromClient = new ObjectInputStream(connectionSocket.getInputStream());
-//			Tank tank = (Tank) fromClient.readObject();
-//			JOptionPane.showMessageDialog(null, tank.getPos());
+			Socket connectionSocket = welcomeSocket.accept();
+			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
+			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
+			clientSentence = inFromClient.readLine();
+			txt.setText(clientSentence);
+			JOptionPane.showMessageDialog(null, "Received: " + clientSentence);
+			System.out.println("Received: " + clientSentence);
+			capitalizedSentence = clientSentence.toUpperCase() + '\n';
+			outToClient.writeBytes(capitalizedSentence);
 		}
 	}
 
