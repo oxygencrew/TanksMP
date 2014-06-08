@@ -183,6 +183,7 @@ public class TanksController implements MouseMotionListener, KeyListener, MouseL
 			m_model.getTanks().get(0).fireProjectile(m_mouse);
 			try
 			{
+				m_model.getToServer().writeBytes("vuuuuuuuuuuuuuuuur");
 				Clip clip = AudioSystem.getClip();
 				AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("blast.wav"));
 				clip.open(inputStream);

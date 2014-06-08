@@ -1,3 +1,5 @@
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -16,8 +18,16 @@ public class TanksModel
 {
 	private ArrayList<Tank> m_tanks;
 	private static Socket clientSocket = null;
-	private ObjectOutputStream toServer;
-	private ObjectInputStream fromServer;
+	private DataOutputStream toServer;
+	public DataOutputStream getToServer() {
+		return toServer;
+	}
+
+	public void setToServer(DataOutputStream a_toServer) {
+		toServer = a_toServer;
+	}
+
+	private DataInputStream fromServer;
 	TanksController m_controller;
 	
 	public TanksModel(TanksController a_controller) throws Exception
@@ -26,8 +36,12 @@ public class TanksModel
 		m_controller = a_controller;
 		m_tanks.add(new Tank(100, 100, 75, 50));
 		clientSocket = new Socket("localhost", 9000);
-		toServer = new ObjectOutputStream(clientSocket.getOutputStream());
-		fromServer = new ObjectInputStream(clientSocket.getInputStream());
+		toServer = new DataOutputStream(clientSocket.getOutputStream());
+		setFromServer(new DataInputStream(clientSocket.getInputStream()));
+//		toServer = new ObjectOutputStream(clientSocket.getOutputStream());
+//		fromServer = new ObjectInputStream(clientSocket.getInputStream());
+		toServer.writeBytes("test");
+		System.out.println("aoiefjAEFF");
 	}
 
 	public ArrayList<Tank> getTanks() {
@@ -51,14 +65,14 @@ public class TanksModel
 		ArrayList<Projectile> tests = new ArrayList<Projectile>();
 		for(Tank t : m_tanks)
 		{
-			try 
-			{
-				toServer.writeObject(t);
-			} 
-			catch (IOException e) 
-			{
-				
-			}
+//			try 
+//			{
+//				toServer.writeObject(t);
+//			} 
+//			catch (IOException e) 
+//			{
+//				
+//			}
 			tests.addAll(t.getProjectiles());
 			t.update();
 		}
@@ -85,5 +99,13 @@ public class TanksModel
 
 	public Socket getClientSocket() {
 		return clientSocket;
+	}
+
+	public DataInputStream getFromServer() {
+		return fromServer;
+	}
+
+	public void setFromServer(DataInputStream a_fromServer) {
+		fromServer = a_fromServer;
 	}
 }
