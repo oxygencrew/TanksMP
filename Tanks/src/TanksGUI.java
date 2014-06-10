@@ -1,13 +1,16 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Shape;
 import java.awt.event.WindowEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.io.IOException;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -16,9 +19,18 @@ public class TanksGUI extends JPanel
 {
 	private TanksModel m_model;
 	private TanksController m_controller;
+	private Image bg;
 	
 	public TanksGUI(final TanksModel a_model, TanksController a_controller)
 	{
+		try
+		{
+			bg = ImageIO.read(new File("SUNNY-Assorted-Ground.bmp"));
+		}
+		catch(Exception e)
+		{
+			
+		}
 		m_model = a_model;
 		m_controller = a_controller;
 		JFrame main = new JFrame();
@@ -52,6 +64,12 @@ public class TanksGUI extends JPanel
 	{
 		super.paintComponent(a_g);
 		Graphics2D g2 = (Graphics2D) a_g;
+		
+		for(int x = 0; x <= 1920 / 512; x++)
+		{
+			g2.drawImage(bg, x * 512, 0, null);
+			g2.drawImage(bg, x * 512, 512, null);
+		}
 		
 		//draw tank body
 		for(Tank t : m_model.getTanks())
