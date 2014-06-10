@@ -55,7 +55,7 @@ class TanksServer implements Runnable
                 throw new RuntimeException("Error accepting client connection", e);
             }
 
-			new Thread(new Server_Thread(clientSocket)).start();	
+			new Thread(new ServerThread(clientSocket)).start();	
 		}
 		
 		System.out.println("Server stopped.");
