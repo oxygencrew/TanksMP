@@ -32,12 +32,14 @@ public class TanksModel
 			System.out.println("sent");
 			try
 			{
-				outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
-				for(Tank t : m_tanks)
-				{
-					System.out.println(t);
-					outToServer.writeObject(t);
-				}
+//				outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
+//				for(Tank t : m_tanks)
+//				{
+//					System.out.println(t);
+//					outToServer.writeObject(t);
+//				}
+//				fromServer = new BufferedReader(new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
+//					System.out.println(fromServer.readLine());
 			}
 			catch(Exception e)
 			{
@@ -46,7 +48,7 @@ public class TanksModel
 		}
 	};
 	
-	Timer t = new Timer(1000, tickRate);
+	Timer t = new Timer(5000, tickRate);
 	
 	private ArrayList<Tank> m_tanks;
 	private Socket clientSocket;
@@ -55,7 +57,7 @@ public class TanksModel
 		return outToServer;
 	}
 
-	private ObjectInputStream fromServer;
+	private BufferedReader fromServer;
 	TanksController m_controller;
 	private ObjectOutputStream outToServer;
 	
@@ -131,7 +133,7 @@ public class TanksModel
 		return clientSocket;
 	}
 
-	public ObjectInputStream getFromServer() 
+	public BufferedReader getFromServer() 
 	{
 		return fromServer;
 	}

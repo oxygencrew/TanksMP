@@ -60,6 +60,7 @@ class TanksServer implements Runnable
 	            }
 
 				new Thread(new ServerThread(clientSocket)).start();
+				currentConnections++;
 			}
 			
 			else

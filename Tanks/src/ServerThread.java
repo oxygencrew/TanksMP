@@ -30,9 +30,9 @@ public class ServerThread implements Runnable
 				BufferedReader inFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
 				clientSentence = inFromClient.readLine();
-				JOptionPane.showMessageDialog(null, "Received: " + clientSentence);
 				capitalizedSentence = clientSentence.toUpperCase() + '\n';
-				outToClient.writeBytes(capitalizedSentence);
+				outToClient.writeBytes(String.valueOf(TanksServer.currentConnections));
+				//outToClient.writeInt(TanksServer.currentConnections);
 			}
 
 			catch(IOException e)
