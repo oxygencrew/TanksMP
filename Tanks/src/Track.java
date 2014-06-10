@@ -3,6 +3,7 @@ import java.awt.Shape;
 import java.awt.geom.Area;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.io.Serializable;
 
 /**
  * 
@@ -12,7 +13,7 @@ import java.awt.geom.Rectangle2D;
  * @author justin
  *
  */
-public class Track 
+public class Track implements Serializable
 {
 	private Area track;
 	private double m_angle;

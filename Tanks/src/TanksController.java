@@ -28,11 +28,11 @@ public class TanksController implements MouseMotionListener, KeyListener, MouseL
 		m_mouse = new Point2D.Double(0, 0);
 		try
 		{
-			clip = AudioSystem.getClip();
-			AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("driving.wav"));
-			clip.open(inputStream);
-			clip.loop(Clip.LOOP_CONTINUOUSLY);
-			clip.start();
+//			clip = AudioSystem.getClip();
+//			AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("driving.wav"));
+//			clip.open(inputStream);
+//			clip.loop(Clip.LOOP_CONTINUOUSLY);
+			//clip.start();
 		}
 		catch (Exception e)
 		{
@@ -183,11 +183,11 @@ public class TanksController implements MouseMotionListener, KeyListener, MouseL
 				m_model.getTanks().get(0).fireProjectile(m_mouse);
 				try
 			{
-					m_model.getToServer().writeBytes("fire" + '\n');
-				Clip clip = AudioSystem.getClip();
-				AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("blast.wav"));
-				clip.open(inputStream);
-				clip.start();
+				//	m_model.getToServer().writeBytes("fire" + '\n');
+//				Clip clip = AudioSystem.getClip();
+//				AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File("blast.wav"));
+//				clip.open(inputStream);
+//				clip.start();
 			}
 			catch (Exception e)
 			{

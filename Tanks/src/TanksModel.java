@@ -1,3 +1,5 @@
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -9,6 +11,8 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
+import javax.swing.Timer;
+
 /**
  * 
  */
@@ -19,20 +23,41 @@ import java.util.ArrayList;
  */
 public class TanksModel 
 {
+	private ActionListener tickRate = new ActionListener() {
+		
+		@Override
+		public void actionPerformed(ActionEvent a_e) 
+		{
+			
+			System.out.println("sent");
+			try
+			{
+				outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
+				for(Tank t : m_tanks)
+				{
+					System.out.println(t);
+					outToServer.writeObject(t);
+				}
+			}
+			catch(Exception e)
+			{
+				System.out.println("hij doet het niet | " + e.getLocalizedMessage());
+			}
+		}
+	};
+	
+	Timer t = new Timer(1000, tickRate);
+	
 	private ArrayList<Tank> m_tanks;
 	private Socket clientSocket;
-	private DataOutputStream toServer;
-	public DataOutputStream getToServer() {
+	
+	public ObjectOutputStream getToServer() {
 		return outToServer;
 	}
 
-	public void setToServer(DataOutputStream a_toServer) {
-		toServer = a_toServer;
-	}
-
-	private DataInputStream fromServer;
+	private ObjectInputStream fromServer;
 	TanksController m_controller;
-	private DataOutputStream outToServer;
+	private ObjectOutputStream outToServer;
 	
 	public TanksModel(TanksController a_controller) throws Exception
 	{
@@ -42,6 +67,7 @@ public class TanksModel
 		InetAddress locIP = InetAddress.getByName("localhost");
 		System.out.println(locIP);
 		clientSocket = new Socket(locIP, 9000);
+		t.start();
 	}
 
 	public void sendSomething(String test)
@@ -72,31 +98,10 @@ public class TanksModel
 	
 	public void update()
 	{
-		try
-		{
-			String sentence;
-			String modifiedSentence;
-			BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-			
-	
-			outToServer = new DataOutputStream(clientSocket.getOutputStream());
-			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		}
-		catch(Exception e)
-		{
-			System.out.println("hij doet het niet");
-		}
+		
 		ArrayList<Projectile> tests = new ArrayList<Projectile>();
 		for(Tank t : m_tanks)
 		{
-//			try 
-//			{
-//				toServer.writeObject(t);
-//			} 
-//			catch (IOException e) 
-//			{
-//				
-//			}
 			tests.addAll(t.getProjectiles());
 			t.update();
 		}
@@ -112,7 +117,6 @@ public class TanksModel
 							if (p.getPos().distance(p1.getPos()) < 10) {
 								p.setAlive(false);
 								p1.setAlive(false);
-								sendSomething("collisione");
 								System.out.println("Collisions");
 							}
 						}
@@ -122,15 +126,13 @@ public class TanksModel
 		}
 	}
 
-	public Socket getClientSocket() {
+	public Socket getClientSocket() 
+	{
 		return clientSocket;
 	}
 
-	public DataInputStream getFromServer() {
+	public ObjectInputStream getFromServer() 
+	{
 		return fromServer;
-	}
-
-	public void setFromServer(DataInputStream a_fromServer) {
-		fromServer = a_fromServer;
 	}
 }

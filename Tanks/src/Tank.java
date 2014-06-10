@@ -23,7 +23,7 @@ public class Tank implements Serializable
 	private Point2D m_size;
 	private Shape m_bodyShape;
 	private Shape m_gunShape;
-	private ArrayList<Projectile> projectiles;
+	private transient ArrayList<Projectile> projectiles;
 	private ArrayList<Track> tracks;
 	private int frame = 0;
 	
@@ -31,6 +31,13 @@ public class Tank implements Serializable
 		return tracks;
 	}
 
+	public String toString()
+	{
+		String s = " pos = " + m_pos + "\n degrees = " + m_degrees + "\n aimDir = " + m_aimDir;
+		
+		return s;
+	}
+	
 	public void update()
 	{
 		Iterator<Track> it = tracks.iterator();
@@ -41,6 +48,16 @@ public class Tank implements Serializable
 			if(tracks.size() > 10)
 			{
 				it.remove();
+			}
+		}
+		
+		Iterator<Projectile> shells = projectiles.iterator();
+		while(shells.hasNext())
+		{
+			Projectile p = shells.next();
+			if(!p.isAlive())
+			{
+				shells.remove();
 			}
 		}
 	}

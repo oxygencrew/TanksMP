@@ -1,9 +1,10 @@
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
 
-public class Projectile 
+public class Projectile implements Serializable
 {
 	private double m_angle;
 	private GeneralPath body;
