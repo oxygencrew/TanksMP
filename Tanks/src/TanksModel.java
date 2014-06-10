@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 public class TanksModel 
 {
 	private ArrayList<Tank> m_tanks;
-	private static Socket clientSocket;
+	private Socket clientSocket;
 	private DataOutputStream toServer;
 	public DataOutputStream getToServer() {
 		return outToServer;
@@ -38,14 +39,9 @@ public class TanksModel
 		setTanks(new ArrayList<Tank>());
 		m_controller = a_controller;
 		m_tanks.add(new Tank(100, 100, 75, 50));
-		String sentence;
-		String modifiedSentence;
-		BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
-		clientSocket = new Socket("localhost", 9000);
-		outToServer = new DataOutputStream(clientSocket.getOutputStream());
-		BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-		sentence = m_tanks.get(0).getPos().toString();
-		outToServer.writeBytes("test");
+		InetAddress locIP = InetAddress.getByName("localhost");
+		System.out.println(locIP);
+		clientSocket = new Socket(locIP, 9000);
 	}
 
 	public void sendSomething(String test)
@@ -76,6 +72,20 @@ public class TanksModel
 	
 	public void update()
 	{
+		try
+		{
+			String sentence;
+			String modifiedSentence;
+			BufferedReader inFromUser = new BufferedReader(new InputStreamReader(System.in));
+			
+	
+			outToServer = new DataOutputStream(clientSocket.getOutputStream());
+			BufferedReader inFromServer = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+		}
+		catch(Exception e)
+		{
+			System.out.println("hij doet het niet");
+		}
 		ArrayList<Projectile> tests = new ArrayList<Projectile>();
 		for(Tank t : m_tanks)
 		{

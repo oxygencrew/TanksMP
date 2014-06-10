@@ -39,10 +39,10 @@ public class TanksServer {
 		String clientSentence;
 		String capitalizedSentence;
 		ServerSocket welcomeSocket = new ServerSocket(9000);
+		Socket connectionSocket = welcomeSocket.accept();
 		
 		while(true)
 		{
-			Socket connectionSocket = welcomeSocket.accept();
 			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
 			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
 			clientSentence = inFromClient.readLine();
