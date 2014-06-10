@@ -15,7 +15,7 @@ class TanksServer implements Runnable
 	JPanel main = new JPanel(new BorderLayout());
 	JTextField txt = new JTextField("");
 
-	protected int currentConnections = 0;
+	protected static int currentConnections = 0;
 	protected int maxConnections = 10;
 	
 	protected int serverPort = 9000;
@@ -60,6 +60,7 @@ class TanksServer implements Runnable
 	            }
 
 				new Thread(new ServerThread(clientSocket)).start();
+				currentConnections++;
 			}
 			
 			else
