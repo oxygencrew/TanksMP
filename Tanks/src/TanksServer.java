@@ -15,7 +15,9 @@ class TanksServer implements Runnable
 	JPanel main = new JPanel(new BorderLayout());
 	JTextField txt = new JTextField("");
 
-
+	protected int currentConnections = 0;
+	protected int maxConnections = 10;
+	
 	protected int serverPort = 9000;
 	protected ServerSocket serverSocket = null;
 	protected boolean isStopped    = false;
@@ -38,24 +40,33 @@ class TanksServer implements Runnable
 		
 		while(!isStopped())
 		{
-			Socket clientSocket = null;
-			try 
+			if(currentConnections < maxConnections)
 			{
-				clientSocket = serverSocket.accept();
+				Socket clientSocket = null;
+				try 
+				{
+					clientSocket = serverSocket.accept();
+				}
+
+				catch (IOException e) 
+				{
+	                if(isStopped()) 
+	                {
+	                    System.out.println("Server Stopped.") ;
+	                    return;
+	                }
+	                
+	                throw new RuntimeException("Error accepting client connection", e);
+	            }
+
+				new Thread(new ServerThread(clientSocket)).start();
+			}
+			
+			else
+			{
+				System.out.println("Server is full");
 			}
 
-			catch (IOException e) 
-			{
-                if(isStopped()) 
-                {
-                    System.out.println("Server Stopped.") ;
-                    return;
-                }
-                
-                throw new RuntimeException("Error accepting client connection", e);
-            }
-
-			new Thread(new ServerThread(clientSocket)).start();	
 		}
 		
 		System.out.println("Server stopped.");
