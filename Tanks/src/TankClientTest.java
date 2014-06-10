@@ -5,14 +5,6 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 
-/**
- * 
- */
-
-/**
- * @author justin
- *
- */
 public class TankClientTest {
 
 	/**

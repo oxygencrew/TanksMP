@@ -7,14 +7,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * 
- */
 
-/**
- * @author justin
- *
- */
 public class Tank implements Serializable
 {
 	private Point2D m_pos;

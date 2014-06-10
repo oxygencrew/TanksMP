@@ -13,14 +13,7 @@ import java.util.ArrayList;
 
 import javax.swing.Timer;
 
-/**
- * 
- */
 
-/**
- * @author justin
- *
- */
 public class TanksModel 
 {
 	private ActionListener tickRate = new ActionListener() {

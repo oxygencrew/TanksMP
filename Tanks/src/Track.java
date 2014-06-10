@@ -9,10 +9,7 @@ import java.io.Serializable;
  * 
  */
 
-/**
- * @author justin
- *
- */
+
 public class Track implements Serializable
 {
 	private Area track;
