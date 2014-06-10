@@ -1,6 +1,3 @@
-/**
- * 
- */
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -11,47 +8,117 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-/**
- * @author justin
- *
- */
-public class TanksServer {
 
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) throws Exception
+class TanksServer implements Runnable
+{
+	JFrame frame = new JFrame();
+	JPanel main = new JPanel(new BorderLayout());
+	JTextField txt = new JTextField("");
+
+
+	protected int serverPort = 9000;
+	protected ServerSocket serverSocket = null;
+	protected boolean isStopped    = false;
+	protected Thread runningThread= null;
+
+	public TanksServer(int port)
 	{
+		this.serverPort = port;
+	}
+	
+	public void run()
+	{
+		initializeWindow();
+		synchronized (this) 
+		{
+			this.runningThread = Thread.currentThread();
+		}
+
+		openServerSocket();
 		
-		JFrame frame = new JFrame();
-		JPanel main = new JPanel(new BorderLayout());
+		while(!isStopped())
+		{
+			Socket clientSocket = null;
+			try 
+			{
+				clientSocket = serverSocket.accept();
+			}
+
+			catch (IOException e) 
+			{
+                if(isStopped()) 
+                {
+                    System.out.println("Server Stopped.") ;
+                    return;
+                }
+                
+                throw new RuntimeException("Error accepting client connection", e);
+            }
+
+			new Thread(new Server_Thread(clientSocket)).start();	
+		}
+		
+		System.out.println("Server stopped.");
+	}
+
+	private void openServerSocket() 
+	{
+        try 
+        {
+            this.serverSocket = new ServerSocket(this.serverPort);
+        } 
+        
+        catch (IOException e) 
+        {
+            throw new RuntimeException("Cannot open port 9000", e);
+        }
+    }
+	
+	private synchronized boolean isStopped() 
+	{
+        return this.isStopped;
+    }
+	
+	public synchronized void stop()
+	{
+        this.isStopped = true;
+        
+        try 
+        {
+            this.serverSocket.close();
+        } 
+        
+        catch (IOException e) 
+        {
+            throw new RuntimeException("Error closing server", e);
+        }
+    }
+	
+	public void initializeWindow()
+	{
 		frame.setTitle("chattings");
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.pack();
 		frame.setSize(new Dimension(640, 480));
 		frame.setBackground(Color.green);
-		JTextField txt = new JTextField("");
 		txt.setPreferredSize(new Dimension(200, 25));
 		frame.add(main);
 		main.add(txt, BorderLayout.SOUTH);
-
 		frame.setVisible(true);
-		String clientSentence;
-		String capitalizedSentence;
-		ServerSocket welcomeSocket = new ServerSocket(9000);
-		Socket connectionSocket = welcomeSocket.accept();
-		
-		while(true)
-		{
-			BufferedReader inFromClient = new BufferedReader(new InputStreamReader(connectionSocket.getInputStream()));
-			DataOutputStream outToClient = new DataOutputStream(connectionSocket.getOutputStream());
-			clientSentence = inFromClient.readLine();
-			txt.setText(clientSentence);
-			JOptionPane.showMessageDialog(null, "Received: " + clientSentence);
-			System.out.println("Received: " + clientSentence);
-			capitalizedSentence = clientSentence.toUpperCase() + '\n';
-			outToClient.writeBytes(capitalizedSentence);
-		}
 	}
+	
+	public static void main(String[] args)
+	{
+		TanksServer server = new TanksServer(9000);
+		new Thread(server).start();
 
+		/*try {
+		    Thread.sleep(20 * 1000);
+		} catch (InterruptedException e) {
+		    e.printStackTrace();
+		}
+		System.out.println("Stopping Server");
+		server.stop();*/
+	}
+	
 }
