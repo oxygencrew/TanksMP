@@ -16,8 +16,19 @@ import javax.swing.Timer;
 
 public class TanksModel 
 {
+	
+	
+	private ArrayList<Tank> m_tanks;
+	private Socket clientSocket;
+	
+	private BufferedReader fromServer;
+	TanksController m_controller;
+	private ObjectOutputStream outToServer;
+	
+	private Tank player;
+	
 	private ActionListener tickRate = new ActionListener() {
-		
+			
 		@Override
 		public void actionPerformed(ActionEvent a_e) 
 		{
@@ -26,11 +37,8 @@ public class TanksModel
 			try
 			{
 				outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
-				for(Tank t : m_tanks)
-				{
-					System.out.println(t);
-					outToServer.writeObject(t);
-				}
+					System.out.println(player);
+					outToServer.writeObject(player);
 			}
 			catch(Exception e)
 			{
@@ -41,22 +49,12 @@ public class TanksModel
 	
 	Timer t = new Timer(5000, tickRate);
 	
-	private ArrayList<Tank> m_tanks;
-	private Socket clientSocket;
-	
-	public ObjectOutputStream getToServer() {
-		return outToServer;
-	}
-
-	private BufferedReader fromServer;
-	TanksController m_controller;
-	private ObjectOutputStream outToServer;
-	
 	public TanksModel(TanksController a_controller) throws Exception
 	{
 		setTanks(new ArrayList<Tank>());
 		m_controller = a_controller;
-		m_tanks.add(new Tank(100, 100, 75, 50));
+		player = new Tank(100, 100, 75, 50);
+		m_tanks.add(player);
 		InetAddress locIP = InetAddress.getByName("localhost");
 		System.out.println(locIP);
 		clientSocket = new Socket(locIP, 9000);
@@ -138,4 +136,9 @@ public class TanksModel
 	{
 		return fromServer;
 	}
+
+	public ObjectOutputStream getToServer() {
+		return outToServer;
+	}
+
 }

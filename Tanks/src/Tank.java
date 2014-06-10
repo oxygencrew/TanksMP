@@ -17,7 +17,7 @@ public class Tank implements Serializable
 	private Shape m_bodyShape;
 	private Shape m_gunShape;
 	private transient ArrayList<Projectile> projectiles;
-	private ArrayList<Track> tracks;
+	private transient ArrayList<Track> tracks;
 	private int frame = 0;
 	
 	public ArrayList<Track> getTracks() {
