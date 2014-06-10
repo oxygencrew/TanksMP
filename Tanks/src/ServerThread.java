@@ -29,9 +29,10 @@ public class ServerThread implements Runnable
 			{
 				BufferedReader inFromClient = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
 				DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
-				clientSentence = inFromClient.readLine();
-				capitalizedSentence = clientSentence.toUpperCase() + '\n';
-				outToClient.writeBytes(String.valueOf(TanksServer.currentConnections));
+//				clientSentence = inFromClient.readLine();
+//				capitalizedSentence = clientSentence.toUpperCase() + '\n';
+//				System.out.println(String.valueOf(TanksServer.currentConnections) + '\n');
+				outToClient.writeBytes(String.valueOf(TanksServer.currentConnections) + '\n');
 				//outToClient.writeInt(TanksServer.currentConnections);
 			}
 

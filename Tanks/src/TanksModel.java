@@ -32,14 +32,12 @@ public class TanksModel
 			System.out.println("sent");
 			try
 			{
-//				outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
-//				for(Tank t : m_tanks)
-//				{
-//					System.out.println(t);
-//					outToServer.writeObject(t);
-//				}
-//				fromServer = new BufferedReader(new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
-//					System.out.println(fromServer.readLine());
+				outToServer = new ObjectOutputStream(clientSocket.getOutputStream());
+				for(Tank t : m_tanks)
+				{
+					System.out.println(t);
+					outToServer.writeObject(t);
+				}
 			}
 			catch(Exception e)
 			{
@@ -69,6 +67,7 @@ public class TanksModel
 		InetAddress locIP = InetAddress.getByName("localhost");
 		System.out.println(locIP);
 		clientSocket = new Socket(locIP, 9000);
+		fromServer = new BufferedReader(new BufferedReader(new InputStreamReader(clientSocket.getInputStream())));
 		t.start();
 	}
 
@@ -100,6 +99,15 @@ public class TanksModel
 	
 	public void update()
 	{
+		try
+		{
+			String sentence = fromServer.readLine();
+			System.out.println(sentence);
+		}
+		catch(Exception e)
+		{
+			
+		}
 		
 		ArrayList<Projectile> tests = new ArrayList<Projectile>();
 		for(Tank t : m_tanks)
